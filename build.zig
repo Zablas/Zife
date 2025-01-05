@@ -35,6 +35,11 @@ pub fn build(b: *std.Build) void {
     exe.root_module.addImport("raylib", raylib);
     exe.root_module.addImport("raygui", raygui);
 
+    const utils_module = b.addModule("utils", .{
+        .root_source_file = b.path("src/utils/root.zig"),
+    });
+    exe.root_module.addImport("utils", utils_module);
+
     const constant_module = b.addModule("constants", .{
         .root_source_file = b.path("src/constants/root.zig"),
     });
@@ -46,6 +51,7 @@ pub fn build(b: *std.Build) void {
     });
     entities_module.addImport("raylib", raylib);
     entities_module.addImport("constants", constant_module);
+    entities_module.addImport("utils", utils_module);
     exe.root_module.addImport("entities", entities_module);
 
     // This declares intent for the executable to be installed into the

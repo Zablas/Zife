@@ -17,22 +17,25 @@ pub fn main() !void {
     defer _ = gpa.deinit();
 
     const allocator = gpa.allocator();
-    var grid = try entities.grid.Grid.init(
+    var simulation = try entities.Simulation.init(
         allocator,
         grid_params.window_width,
         grid_params.window_height,
         grid_params.cell_size,
     );
-    defer grid.deinit();
+    defer simulation.deinit();
 
-    grid.setValue(0, 0, 1);
-    grid.setValue(2, 1, 1);
+    try simulation.setCellValue(5, 29, 1);
+    try simulation.setCellValue(6, 0, 1);
+    try simulation.setCellValue(5, 0, 1);
+    try simulation.setCellValue(4, 0, 1);
+    std.log.debug("ALIVE MEMBERS: {d}", .{simulation.countAliveNeighbours(5, 29)});
 
     while (!rl.windowShouldClose()) {
         rl.beginDrawing();
         defer rl.endDrawing();
 
         rl.clearBackground(colors.grey);
-        grid.draw();
+        simulation.draw();
     }
 }

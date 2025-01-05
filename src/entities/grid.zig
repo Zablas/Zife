@@ -5,6 +5,10 @@ const constants = @import("constants");
 const colors = constants.colors;
 const grid_params = constants.grid_params;
 
+const CellAccessError = error{
+    IndexOutOfBounds,
+};
+
 pub const Grid = struct {
     rows: i32,
     columns: i32,
@@ -56,9 +60,23 @@ pub const Grid = struct {
         }
     }
 
-    pub fn setValue(self: *Grid, row: usize, column: usize, value: i32) void {
-        if (row >= 0 and row < self.rows and column >= 0 and column < self.columns) {
-            self.cells.items[row].items[column] = value;
+    pub fn setValue(self: *Grid, row: i32, column: i32, value: i32) CellAccessError!void {
+        if (self.isWithinBounds(row, column)) {
+            self.cells.items[@intCast(row)].items[@intCast(column)] = value;
+        } else {
+            return CellAccessError.IndexOutOfBounds;
         }
+    }
+
+    pub fn getValue(self: *Grid, row: i32, column: i32) CellAccessError!i32 {
+        if (self.isWithinBounds(row, column)) {
+            return self.cells.items[@intCast(row)].items[@intCast(column)];
+        }
+
+        return CellAccessError.IndexOutOfBounds;
+    }
+
+    fn isWithinBounds(self: *Grid, row: i32, column: i32) bool {
+        return row >= 0 and row < self.rows and column >= 0 and column < self.columns;
     }
 };
