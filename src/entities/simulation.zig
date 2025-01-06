@@ -9,6 +9,7 @@ pub const Simulation = struct {
     width: i32,
     height: i32,
     cell_size: i32,
+    is_running: bool = false,
 
     pub fn init(allocator: std.mem.Allocator, width: i32, height: i32, cell_size: i32) !Simulation {
         return Simulation{
@@ -26,6 +27,10 @@ pub const Simulation = struct {
     }
 
     pub fn update(self: *Simulation) !void {
+        if (!self.is_running) {
+            return;
+        }
+
         for (self.sim_grid.cells.items, 0..) |row, i| {
             for (row.items, 0..) |cell, j| {
                 const aliveNeighbours = self.countAliveNeighbours(@intCast(i), @intCast(j));
