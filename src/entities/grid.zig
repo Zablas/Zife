@@ -28,12 +28,15 @@ pub const Grid = struct {
             i += 1;
         }
 
-        return Grid{
+        var grid = Grid{
             .rows = rows,
             .columns = columns,
             .cell_size = cell_size,
             .cells = cells,
         };
+        grid.fillRandom();
+
+        return grid;
     }
 
     pub fn deinit(self: *Grid) void {
@@ -56,6 +59,15 @@ pub const Grid = struct {
                     grid_params.cell_size - 1,
                     color,
                 );
+            }
+        }
+    }
+
+    pub fn fillRandom(self: *Grid) void {
+        for (self.cells.items, 0..) |row, i| {
+            for (row.items, 0..) |_, j| {
+                const randomValue = rl.getRandomValue(0, 4);
+                self.cells.items[i].items[j] = if (randomValue == 4) 1 else 0;
             }
         }
     }

@@ -25,13 +25,9 @@ pub fn main() !void {
     );
     defer simulation.deinit();
 
-    try simulation.setCellValue(5, 29, 1);
-    try simulation.setCellValue(6, 0, 1);
-    try simulation.setCellValue(5, 0, 1);
-    try simulation.setCellValue(4, 0, 1);
-    std.log.debug("ALIVE MEMBERS: {d}", .{simulation.countAliveNeighbours(5, 29)});
-
     while (!rl.windowShouldClose()) {
+        try simulation.update();
+
         rl.beginDrawing();
         defer rl.endDrawing();
 
