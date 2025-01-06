@@ -22,6 +22,11 @@ pub const Simulation = struct {
         };
     }
 
+    pub fn deinit(self: *Simulation) void {
+        self.sim_grid.deinit();
+        self.temp_grid.deinit();
+    }
+
     pub fn draw(self: Simulation) void {
         self.sim_grid.draw();
     }
@@ -56,13 +61,26 @@ pub const Simulation = struct {
         self.temp_grid = try grid.Grid.init(self.allocator, self.width, self.height, self.cell_size);
     }
 
-    pub fn setCellValue(self: *Simulation, row: i32, column: i32, value: i32) !void {
-        try self.sim_grid.setValue(row, column, value);
+    pub fn toggleCell(self: *Simulation, row: i32, column: i32) void {
+        if (!self.is_running) {
+            self.sim_grid.toggleCell(row, column) catch {};
+        }
     }
 
-    pub fn deinit(self: *Simulation) void {
-        self.sim_grid.deinit();
-        self.temp_grid.deinit();
+    pub fn clearGrid(self: *Simulation) void {
+        if (!self.is_running) {
+            self.sim_grid.clear();
+        }
+    }
+
+    pub fn createRandomState(self: *Simulation) void {
+        if (!self.is_running) {
+            self.sim_grid.fillRandom();
+        }
+    }
+
+    pub fn setCellValue(self: *Simulation, row: i32, column: i32, value: i32) !void {
+        try self.sim_grid.setValue(row, column, value);
     }
 
     pub fn countAliveNeighbours(self: *Simulation, row: i32, column: i32) i32 {

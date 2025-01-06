@@ -28,15 +28,12 @@ pub const Grid = struct {
             i += 1;
         }
 
-        var grid = Grid{
+        return Grid{
             .rows = rows,
             .columns = columns,
             .cell_size = cell_size,
             .cells = cells,
         };
-        grid.fillRandom();
-
-        return grid;
     }
 
     pub fn deinit(self: *Grid) void {
@@ -63,12 +60,28 @@ pub const Grid = struct {
         }
     }
 
+    pub fn clear(self: *Grid) void {
+        for (self.cells.items, 0..) |row, i| {
+            for (row.items, 0..) |_, j| {
+                self.cells.items[i].items[j] = 0;
+            }
+        }
+    }
+
     pub fn fillRandom(self: *Grid) void {
         for (self.cells.items, 0..) |row, i| {
             for (row.items, 0..) |_, j| {
                 const randomValue = rl.getRandomValue(0, 4);
                 self.cells.items[i].items[j] = if (randomValue == 4) 1 else 0;
             }
+        }
+    }
+
+    pub fn toggleCell(self: *Grid, row: i32, column: i32) CellAccessError!void {
+        if (self.isWithinBounds(row, column)) {
+            self.cells.items[@intCast(row)].items[@intCast(column)] = if (self.cells.items[@intCast(row)].items[@intCast(column)] == 1) 0 else 1;
+        } else {
+            return CellAccessError.IndexOutOfBounds;
         }
     }
 

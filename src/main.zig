@@ -41,6 +41,13 @@ pub fn main() !void {
 }
 
 fn handleUserInput(simulation: *entities.Simulation, fps: *i32) void {
+    if (rl.isMouseButtonDown(rl.MouseButton.left)) {
+        const mouse_position = rl.getMousePosition();
+        const row = mouse_position.y / grid_params.cell_size;
+        const column = mouse_position.x / grid_params.cell_size;
+        simulation.toggleCell(@intFromFloat(row), @intFromFloat(column));
+    }
+
     if (rl.isKeyPressed(rl.KeyboardKey.enter)) {
         simulation.is_running = true;
         rl.setWindowTitle("Zife: running...");
@@ -53,5 +60,9 @@ fn handleUserInput(simulation: *entities.Simulation, fps: *i32) void {
     } else if (rl.isKeyPressed(rl.KeyboardKey.s) and fps.* > 5) {
         fps.* -= 2;
         rl.setTargetFPS(fps.*);
+    } else if (rl.isKeyPressed(rl.KeyboardKey.r)) {
+        simulation.createRandomState();
+    } else if (rl.isKeyPressed(rl.KeyboardKey.c)) {
+        simulation.clearGrid();
     }
 }
