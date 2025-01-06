@@ -1,3 +1,3 @@
-pub const cell_size = 25;
-pub const window_width = 750;
-pub const window_height = 750;
+pub const cell_size = 10;
+pub const window_width = 1000;
+pub const window_height = 1000;
